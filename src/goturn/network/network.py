@@ -45,6 +45,16 @@ class GoturnNetwork(nn.Module):
                                          nn.ReLU(inplace=True),
                                          nn.Dropout(dropout_ratio),
                                          nn.Linear(4096, num_output))
+        
+        self._confidence = nn.Sequential(nn.Linear(256 * 6 * 6 * 2, 4096),
+                                         nn.ReLU(inplace=True),
+                                         nn.Dropout(dropout_ratio),
+                                         nn.Linear(4096, 4096),
+                                         nn.Dropout(dropout_ratio),
+                                         nn.Linear(4096, 4096),
+                                         nn.ReLU(inplace=True),
+                                         nn.Dropout(dropout_ratio),
+                                         nn.Linear(4096, 1))
 
         self._num_output = num_output
         if init_fc:
@@ -66,9 +76,10 @@ class GoturnNetwork(nn.Module):
         x2 = x2.view(x2.size(0), 256 * 6 * 6)
 
         x = torch.cat((x1, x2), 1)
-        x = self._classifier(x)
+        pred = self._classifier(x)
+        conf = self._confidence(x)
 
-        return x
+        return pred, conf
 
     def __init_weights(self):
         """Initialize the extra layers """

@@ -208,8 +208,8 @@ class GoturnTrain(LightningModule):
     def forward(self, prev, curr):
         """forward function
         """
-        pred_bb = self._model(prev.float(), curr.float())
-        return pred_bb
+        pred_bb, confidence = self._model(prev.float(), curr.float())
+        return pred_bb, confidence
 
     def vis_images(self, prev, curr, gt_bb, pred_bb, prefix='train'):
 
@@ -249,8 +249,11 @@ class GoturnTrain(LightningModule):
         @batch_idx: current batch index
         """
         curr, prev, gt_bb = batch
-        pred_bb = self.forward(prev, curr)
-        loss = torch.nn.L1Loss(size_average=False)(pred_bb.float(), gt_bb.float())
+        pred_bb, conf_digit = self.forward(prev, curr)
+        confidence = torch.sigmoid(conf_digit)
+        regression_loss = (torch.nn.L1Loss(reduction='none')(pred_bb.float(), gt_bb.float()) * confidence.squeeze()).mean()
+        confidence_loss = torch.mean(-torch.log(confidence))
+        loss = regression_loss + 0.1 * confidence_loss
 
         if self.trainer.use_dp:
             loss = loss.unsqueeze(0)
@@ -267,7 +270,7 @@ class GoturnTrain(LightningModule):
         output = OrderedDict({'loss': loss,
                               'progress_bar': tqdm_dict,
                               'log': tqdm_dict})
-        return output
+        return  
 
     def validation_step(self, batch, batch_idx):
         """validation step

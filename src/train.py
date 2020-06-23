@@ -25,16 +25,15 @@ from torch_lr_finder import LRFinder
 
 from loguru import logger
 
-try:
-    from goturn.dataloaders.goturndataloader import GoturnDataloader
-    from goturn.helper.vis_utils import Visualizer
-    from goturn.network.network import GoturnNetwork
-    from goturn.helper.BoundingBox import BoundingBox
-    from goturn.helper.draw_util import draw
-    from goturn.optimizer.caffeSGD import CaffeSGD
-except ImportError:
-    logger.error('Please run $source settings.sh from root directory')
-    sys.exit(1)
+# try:
+from goturn.dataloaders.goturndataloader import GoturnDataloader
+from goturn.helper.vis_utils import Visualizer
+from goturn.helper.BoundingBox import BoundingBox
+from goturn.helper.draw_util import draw
+from goturn.optimizer.caffeSGD import CaffeSGD
+# except ImportError:
+#     logger.error('Please run $source settings.sh from root directory')
+#     sys.exit(1)
 
 
 class GoturnTrain(LightningModule):

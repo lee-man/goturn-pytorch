@@ -28,6 +28,7 @@ from loguru import logger
 # try:
 from goturn.dataloaders.goturndataloader import GoturnDataloader
 from goturn.helper.vis_utils import Visualizer
+from goturn.network.network import GoturnNetwork
 from goturn.helper.BoundingBox import BoundingBox
 from goturn.helper.draw_util import draw
 from goturn.optimizer.caffeSGD import CaffeSGD
@@ -277,7 +278,7 @@ class GoturnTrain(LightningModule):
         @batch_idx: current batch index
         """
         curr, prev, gt_bb = batch
-        pred_bb = self.forward(prev, curr)
+        pred_bb, _ = self.forward(prev, curr)
         loss = torch.nn.L1Loss(size_average=False)(pred_bb, gt_bb.float())
 
         if self.trainer.use_dp:
@@ -355,7 +356,7 @@ def get_args():
 
     # reproducibility
     ap.add_argument('--seed', type=int, default=42, help='seed value')
-    ap.add_argument('--seed', type=int, default=800, help='seed value')
+    # ap.add_argument('--seed', type=int, default=800, help='seed value')
 
     # save path
     ap.add_argument('--save_path', default=".", type=str, help='path to save output')

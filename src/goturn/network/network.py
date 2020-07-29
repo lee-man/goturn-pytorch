@@ -70,12 +70,10 @@ class GoturnNetwork(nn.Module):
         @x: input
         """
         x1 = self._net_1(x1)
-        print(x1.size())
-
-        x1 = x1.view(x1.size(0), 256 * 6 * 6)
+        x1 = x1.reshape(x1.size(0), 256 * 6 * 6)
 
         x2 = self._net_2(x2)
-        x2 = x2.view(x2.size(0), 256 * 6 * 6)
+        x2 = x2.reshape(x2.size(0), 256 * 6 * 6)
 
         x = torch.cat((x1, x2), 1)
         pred = self._classifier(x)

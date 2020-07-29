@@ -69,8 +69,9 @@ class GoturnNetwork(nn.Module):
         """Foward pass
         @x: input
         """
-        print(x1.size())
         x1 = self._net_1(x1)
+        print(x1.size())
+
         x1 = x1.view(x1.size(0), 256 * 6 * 6)
 
         x2 = self._net_2(x2)

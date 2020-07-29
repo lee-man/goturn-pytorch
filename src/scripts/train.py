@@ -270,7 +270,7 @@ class GoturnTrain(LightningModule):
         output = OrderedDict({'loss': loss,
                               'progress_bar': tqdm_dict,
                               'log': tqdm_dict})
-        return  
+        return  output
 
     def validation_step(self, batch, batch_idx):
         """validation step
@@ -396,7 +396,7 @@ def read_images_dbg(idx):
 
 def main(hparams):
     hparams = get_args()
-    model = GoturnTrain(hparams, dbg=True)
+    model = GoturnTrain(hparams, dbg=False)
     # ckpt_resume_path = './caffenet-dbg-2/_ckpt_epoch_1.ckpt'
     ckpt_cb = ModelCheckpoint(filepath=hparams.save_path, save_top_k=-1,
                               save_weights_only=False)

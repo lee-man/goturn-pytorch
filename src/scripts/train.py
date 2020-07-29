@@ -266,7 +266,7 @@ class GoturnTrain(LightningModule):
             if batch_idx % 1000 == 0:
                 self.vis_images(prev, curr, gt_bb, pred_bb)
 
-        tqdm_dict = {'batch_loss': loss}
+        tqdm_dict = {'batch_loss': loss, 'regression_loss': regression_loss, 'confidence_loss': confidence_loss}
         output = OrderedDict({'loss': loss,
                               'progress_bar': tqdm_dict,
                               'log': tqdm_dict})

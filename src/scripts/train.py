@@ -279,7 +279,7 @@ class GoturnTrain(LightningModule):
         """
         curr, prev, gt_bb = batch
         pred_bb, _ = self.forward(prev, curr)
-        loss = torch.nn.L1Loss(reduction='sum'))(pred_bb, gt_bb.float())
+        loss = torch.nn.L1Loss(reduction='sum')(pred_bb, gt_bb.float())
 
         if self.trainer.use_dp:
             loss = loss.unsqueeze(0)

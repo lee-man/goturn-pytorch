@@ -251,7 +251,7 @@ class GoturnTrain(LightningModule):
         curr, prev, gt_bb = batch
         pred_bb, conf_digit = self.forward(prev, curr)
         confidence = torch.sigmoid(conf_digit)
-        regression_loss = (torch.nn.L1Loss(reduction='none')(pred_bb.float(), gt_bb.float()) * confidence.squeeze()).sum()
+        regression_loss = (torch.nn.L1Loss(reduction='none')(pred_bb.float() * confidence + (1 - confidence) * gt_bb.float(), gt_bb.float())).sum()
         confidence_loss = torch.mean(-torch.log(confidence))
         loss = regression_loss + 0.1 * confidence_loss
 
@@ -279,7 +279,7 @@ class GoturnTrain(LightningModule):
         """
         curr, prev, gt_bb = batch
         pred_bb, _ = self.forward(prev, curr)
-        loss = torch.nn.L1Loss(size_average=False)(pred_bb, gt_bb.float())
+        loss = torch.nn.L1Loss(reduction='sum'))(pred_bb, gt_bb.float())
 
         if self.trainer.use_dp:
             loss = loss.unsqueeze(0)

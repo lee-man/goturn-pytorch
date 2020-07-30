@@ -2,7 +2,7 @@
 
 IMAGENET_PATH='/data/ssd/public/mli/vot/small_dataset/ImageNet'
 # IMAGENET_PATH='/data/ssd/public/mli/vot/ILSVR2014_DET'
-ALOV_PATH='/data/ssd/public/vot/small_dataset/ALOV/'
+ALOV_PATH='/data/ssd/public/mli/vot/small_dataset/ALOV/'
 # ALOV_PATH='/data/ssd/public/mli/vot/ALOV'
 SAVE_PATH='./caffenet/'
 PRETRAINED_MODEL_PATH='../goturn/models/pretrained/caffenet_weights.npy'

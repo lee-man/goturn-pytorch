@@ -66,16 +66,19 @@ class GoturnTrain(LightningModule):
             self._model = GoturnNetwork()
             checkpoint = torch.load(self.hparams.pretrained_model)['state_dict']
             checkpoint = self.load_model_param(checkpoint)
-            self._model.load_state_dict(checkpoint)
+            self._model.load_state_dict(checkpoint, strict=False)
         self._dbg = dbg
         if dbg:
             self._viz = Visualizer(port=8097)
     
     def load_model_param(self, state_dict):
+        '''
+        The customized funtion to load the parameter weights into GoturnTrain's model. (self._model)
+        '''
         state_dict_modified = copy.deepcopy(state_dict)
         for key in state_dict:
             if '_model' in key:
-                pre, post = key.split('.', num=1)
+                pre, post = key.split('.', 1)
                 state_dict_modified[post] = state_dict_modified.pop(key)
         return state_dict_modified
         

@@ -59,7 +59,12 @@ class GoturnTrain(LightningModule):
         logger.info('Setting up the network...')
 
         # network with pretrained model
-        self._model = GoturnNetwork(self.hparams.pretrained_model)
+        if not self.hparams.finetune:
+            self._model = GoturnNetwork(self.hparams.pretrained_model)
+        else:
+            self._model = GoturnNetwork()
+            checkpoint = torch.load(self.hparams.pretrained_model)
+            self._model.load_state_dict(checkpoint['state_dict'], strict=False)
         self._dbg = dbg
         if dbg:
             self._viz = Visualizer(port=8097)
@@ -353,6 +358,9 @@ def get_args():
     ap.add_argument('--gamma', default=0.1, type=float,
                     help='multiplicative factor for learning rate',
                     dest='gamma')
+    ap.add_argument('--finetune', default=1, type=int,
+                    help='finetune on the pre-trained model',
+                    dest='finetune')
 
     # reproducibility
     ap.add_argument('--seed', type=int, default=42, help='seed value')

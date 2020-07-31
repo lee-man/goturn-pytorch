@@ -5,7 +5,8 @@ IMAGENET_PATH='/data/ssd/public/mli/vot/small_dataset/ImageNet'
 ALOV_PATH='/data/ssd/public/mli/vot/small_dataset/ALOV/'
 # ALOV_PATH='/data/ssd/public/mli/vot/ALOV'
 SAVE_PATH='./caffenet/'
-PRETRAINED_MODEL_PATH='../goturn/models/pretrained/caffenet_weights.npy'
+PRETRAINED_MODEL_PATH='../goturn/models/pretrained/_ckpt_epoch_3.ckpt'
+# PRETRAINED_MODEL_PATH='../goturn/models/pretrained/caffenet_weights.npy'
 
 python train.py \
 --imagenet_path $IMAGENET_PATH \

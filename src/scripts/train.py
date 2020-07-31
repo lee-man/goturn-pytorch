@@ -11,6 +11,7 @@ import random
 import sys
 from collections import OrderedDict
 from multiprocessing import Manager
+import copy
 
 import cv2
 import numpy as np
@@ -63,11 +64,21 @@ class GoturnTrain(LightningModule):
             self._model = GoturnNetwork(self.hparams.pretrained_model)
         else:
             self._model = GoturnNetwork()
-            checkpoint = torch.load(self.hparams.pretrained_model)
-            self._model.load_state_dict(checkpoint['state_dict'], strict=False)
+            checkpoint = torch.load(self.hparams.pretrained_model)['state_dict']
+            checkpoint = self.load_model_param(checkpoint)
+            self._model.load_state_dict(checkpoint)
         self._dbg = dbg
         if dbg:
             self._viz = Visualizer(port=8097)
+    
+    def load_model_param(self, state_dict):
+        state_dict_modified = copy.deepcopy(state_dict)
+        for key in state_dict:
+            if '_model' in key:
+                pre, post = key.split('.', num=1)
+                state_dict_modified[post] = state_dict_modified.pop(key)
+        return state_dict_modified
+        
 
     def __freeze(self):
         """Freeze the model features layer
